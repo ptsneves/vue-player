@@ -7,15 +7,12 @@
 	@mouseenter="atMouseenter"
 	@mouseleave="atMouseleave"
 >
-	<video 
+	<video
 		ref="video"
 		:src="srcComputed"
 		:controls="false"
 		:autoplay="autoplay"
 		:playsinline="playsinline"
-		:class="{
-			'transparent': !started
-		}"
 		@play="play"
 		@pause="pause"
 		@click="atPlayPause"
@@ -34,102 +31,118 @@
 		v-if="!started"
 	/>
 
-	<div 
-		:class="overlayClass"
-		v-if="!started"
-	>
-		<div
-			class="title"
-			v-if="title"
-		>
-			{{title}}
-		</div>
+<!--	<div-->
+<!--		:class="overlayClass"-->
+<!--		v-if="!started"-->
+<!--	>-->
+<!--		<div-->
+<!--			class="title"-->
+<!--			v-if="title"-->
+<!--		>-->
+<!--			{{title}}-->
+<!--		</div>-->
 
-		<p-button
-			class="start-button"
-			@click="atPlayPause"
-		>
-			<i class="material-icons size-124">play_arrow</i>
-		</p-button>
+<!--		<p-button-->
+<!--			class="start-button"-->
+<!--			@click="atPlayPause"-->
+<!--		>-->
+<!--			<slot name="play-button-overlay-content">-->
+<!--				<i class="material-icons size-124">play_arrow</i>-->
+<!--			</slot>-->
+<!--		</p-button>-->
 
-	</div>
+<!--	</div>-->
 
-	
-	<i 
+
+	<i
 		class="material-icons size-124 spin"
 		v-if="started && loading"
 	>refresh</i>
-	
-	<!-- Use this slot to replace the controls  -->
-	<slot name="controls">
-		<controls 
-			:class="controlsClass"
-			:show="showControlsIf"
-			:style="controlsStyleComputed"
-		>
-			<p-button
-				:class="playButtonClass"
-				:style="playButtonStyle"
-				@click="atPlayPause"
+
+	<div :class="videoPlayingOverlay">
+
+		<!-- Use this slot to replace the controls  -->
+		<slot name="controls">
+			<controls
+				:class="controlsClass"
+				:show="showControlsIf"
+				:style="controlsStyleComputed"
 			>
-				<i 
-					v-if="!playingComputed"
-					class="material-icons"
+				<div
+				:class="mainControlsClass"
 				>
-					play_arrow
-				</i>
+					<p-button
+						:class="playButtonClass"
+						:style="playButtonStyle"
+						@click="atPlayPause"
+					>
+						<slot name="play-button-content"
+							v-if="!playingComputed"
+						>
+							play_arrow
+						</slot>
 
-				<i 
-					v-else
-					class="material-icons"
+						<slot name="pause-button-content"
+							v-else
+						>
+							pause
+						</slot>
+					</p-button>
+
+					<div
+							v-if="showVolume"
+					>
+						<p-button
+							@click="atVolume"
+							:class="volumeButtonClass"
+							:style="volumeButtonStyle"
+						>
+							<i
+								class="material-icons"
+							>
+								volume_up
+							</i>
+						</p-button>
+
+						<range
+							v-model="volumeComputed"
+							:max="1"
+							width="60px"
+							:show="showSound"
+						/>
+					</div>
+					<span
+						:class="timerClass"
+						:style="timerStyle"
+					>
+						{{minutesTime}} / {{minutesDuration}}
+					</span>
+
+					<p-button
+						:class="fullscreenButtonClass"
+						:style="fullscreenButtonStyle"
+						@click="atFullscreen"
+					>
+						<slot name="fullscreen-button-content">
+							<i class="material-icons">fullscreen</i>
+						</slot>
+					</p-button>
+					<slot name="optional-settings-controls"></slot>
+				</div>
+				<div
+						:class="rangeControlsClass"
 				>
-					pause
-				</i>
-			</p-button>
-			
-			<p-button
-				@click="atVolume"
-				:class="volumeButtonClass"
-				:style="volumeButtonStyle"
-			>
-				<i 
-					class="material-icons"
-				>
-					volume_up
-				</i>
-			</p-button>
+					<range
+							v-model="timeComputed"
+							class="vue-player-time-control"
+							:max="duration"
+							show
+					/>
+				</div>
 
-			<range
-				v-model="volumeComputed"
-				:max="1"
-				width="60px"
-				:show="showSound"
-			/>
-
-			<p-button
-				@click="atVolume"
-				:class="timerClass"
-				:style="timerStyle"
-			>
-				{{minutesTime}} / {{minutesDuration}}
-			</p-button>
-
-			<p-button
-				:class="fullscreenButtonClass"
-				:style="fullscreenButtonStyle"
-				@click="atFullscreen"
-			>
-				<i class="material-icons">fullscreen</i>
-			</p-button>
-
-			<range
-				v-model="timeComputed"
-				class="vue-player-time-control"
-				:max="duration"
-				show
-			/>
-		</controls>
-	</slot>
+			</controls>
+		</slot>
+	</div>
 </div>
 </template>
 
@@ -163,6 +176,15 @@ export default {
 		title: {
 			type: String,
 			default: null
+		},
+
+		/**
+		 * Show or not the volume controls
+		 *
+	 	*/
+		showVolume: {
+			type: Boolean,
+			defautl: true,
 		},
 
 		/**
@@ -249,6 +271,13 @@ export default {
 		},
 
 		/**
+		 * class for the overlay
+		 */
+		videoPlayingOverlay: {
+		},
+
+
+		/**
        * class for the controls bar
        */
 		controlsClass:{
@@ -311,12 +340,20 @@ export default {
 			default: null
 		},
 
+		mainControlsClass: {
+			default: null,
+		},
+
 		/**
        * style for the controls bar
        */
 		controlsStyle: {
 			default: undefined
-		}
+		},
+
+		rangeControlsClass: {
+			default: null,
+		},
 	},
 
 	data () {
@@ -355,7 +392,7 @@ export default {
 	   test (e) {
 		   console.log("test", e)
 	   },
-		
+
 		/**
        * @private
        */
@@ -454,8 +491,16 @@ export default {
        * @private
        */
 		atPlayPause () {
-			if (!this.playingComputed) this.$refs.video.play()
-			else this.$refs.video.pause()
+			if (!this.playingComputed) this.doPlay()
+			else this.doPause()
+		},
+
+		doPlay() {
+			this.$refs.video.play()
+		},
+
+		doPause() {
+			this.$refs.video.pause()
 		},
 
 		/**
@@ -595,7 +640,7 @@ export default {
        * @private
        */
 		showControlsIf () {
-			return (this.showControlsComputed || !this.playingComputed) && this.started 
+			return (this.showControlsComputed || !this.playingComputed)
 		},
 
 		/**
@@ -657,12 +702,13 @@ export default {
 }
 
 .start-button {
-	width: auto;
-	height: auto;
+	width: 100%;
+	height: 100%;
 	border: 8px solid white;
 	border-radius: 1rem;
 	background-color: rgba(0, 0, 0, 0.3);
 	cursor: pointer;
+	display: inline-block;
 }
 
 .start-button:hover {
@@ -692,13 +738,15 @@ export default {
 .vue-video-player video {
 	width: 100%;
 	height: 100%;
+	border-radius: 4px;
 }
 
 .vue-video-player {
 	position: relative;
-	font-size:0; 
-	color: white;
+	font-size:0;
+	background: black;
 	display: block;
+	border-radius: 4px;
 }
 
 .timer {
@@ -739,7 +787,6 @@ export default {
 }
 
 input[type=range].vue-player-time-control {
-	position: absolute;	
 	top: -5px;
 	left: 0;
 	padding-top: 0;
