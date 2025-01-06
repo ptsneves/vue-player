@@ -1,33 +1,33 @@
 <template>
 <div class="vue-video-player-container">
-	<div
-		class="loading-bar"
-		:style="{width: `${loadPercent}%`}"
-		v-if="loading"
-	/>
+    <div
+        class="loading-bar"
+        :style="{width: `${loadPercent}%`}"
+        v-if="loading"
+    />
 
-	<video 
-		:src="computedSrc"
-		:controls="false"
-		class="placeholder"
-		:loop="true"
-		autoplay 
-		muted 
-		playsinline
-		v-show="showVideo"
-		v-if="ifVideo"
-		ref="video"
-		@loadstart="loadVideo"
-		@progress="atProgress"
-	>
-		<slot name="video-placeholder-sources"></slot>
-	</video>
+    <video
+        :src="computedSrc"
+        :controls="false"
+        class="placeholder"
+        :loop="true"
+        autoplay
+        muted
+        playsinline
+        v-show="showVideo"
+        v-if="ifVideo"
+        ref="video"
+        @loadstart="loadVideo"
+        @progress="atProgress"
+    >
+        <slot name="video-placeholder-sources"></slot>
+    </video>
 
-	<img
-		:src="poster"
-		class="placeholder"
-		v-show="showPoster"
-	/>
+    <img
+        :src="poster"
+        class="placeholder"
+        v-show="showPoster"
+    />
 </div>
 </template>
 
@@ -35,145 +35,145 @@
 import enableInlineVideo from 'iphone-inline-video';
 
 export default {
-	name: 'video-placeholder',
+    name: 'video-placeholder',
 
-	props: {
-		src: {
-			required: false,
-			type: String
-		},
-		
-		poster: {
-			required: false,
-			type: String
-		},
-		
-		previewOnMouse: {
-			type: Boolean,
-			default: false
-		},
-		
-		mouseover: {
-			type: Boolean,
-			default: false
-		},
-	},
+    props: {
+        src: {
+            required: false,
+            type: String
+        },
 
-	data () {
-		return {
-			loading: false,
-			loadPercent: 0
-		}
-	},
+        poster: {
+            required: false,
+            type: String
+        },
 
-	methods:{
-		atProgress (e) {
-			if (typeof (this.$refs.video.buffered) === 'undefined' || this.$refs.video.buffered.length <= 0) {
-				return // we are not yet ready as data is not yet available
-			}
-			var range = 0;
-			var bf = this.$refs.video.buffered;
-			var time = this.$refs.video.currentTime;
+        previewOnMouse: {
+            type: Boolean,
+            default: false
+        },
 
-			while(!(bf.start(range) <= time && time <= bf.end(range))) {
-				range += 1;
-			}
+        mouseover: {
+            type: Boolean,
+            default: false
+        },
+    },
 
-			var loadStartPercentage = bf.start(range) / this.$refs.video.duration;
-			var loadEndPercentage = bf.end(range) / this.$refs.video.duration;
+    data () {
+        return {
+            loading: false,
+            loadPercent: 0
+        }
+    },
 
-			this.loadPercent = (loadEndPercentage - loadStartPercentage) * 100
+    methods:{
+        atProgress (e) {
+            if (typeof (this.$refs.video.buffered) === 'undefined' || this.$refs.video.buffered.length <= 0) {
+                return // we are not yet ready as data is not yet available
+            }
+            var range = 0;
+            var bf = this.$refs.video.buffered;
+            var time = this.$refs.video.currentTime;
 
-			if (this.loadPercent >= 100) this.loading = false
-		},
+            while(!(bf.start(range) <= time && time <= bf.end(range))) {
+                range += 1;
+            }
 
-		loadVideo (e) {
-			this.loading = true
+            var loadStartPercentage = bf.start(range) / this.$refs.video.duration;
+            var loadEndPercentage = bf.end(range) / this.$refs.video.duration;
 
-			enableInlineVideo(this.$refs.video, {
-				iPad: true
-			})
-		},
-	},
+            this.loadPercent = (loadEndPercentage - loadStartPercentage) * 100
+
+            if (this.loadPercent >= 100) this.loading = false
+        },
+
+        loadVideo (e) {
+            this.loading = true
+
+            enableInlineVideo(this.$refs.video, {
+                iPad: true
+            })
+        },
+    },
   watch: {
-		ifVideo: {
-			immediate: true,
-			async handler(newValue) {
-				if (newValue) {
-					// Wait until the DOM is updated
-					await this.$nextTick();
-					if (this.$refs.video && this.$slots["video-placeholder-sources"]) {
-						this.$refs.video.removeAttribute("src")
-					}
-				}
-			},
-		},
-	},
-	computed: {
-		computedSrc() {
-			if (this.$slots["video-placeholder-sources"])
-				return false
-			return this.src
-		},
-		ifVideo () {
-			let result = false
+        ifVideo: {
+            immediate: true,
+            async handler(newValue) {
+                if (newValue) {
+                    // Wait until the DOM is updated
+                    await this.$nextTick();
+                    if (this.$refs.video && this.$slots["video-placeholder-sources"]) {
+                        this.$refs.video.removeAttribute("src")
+                    }
+                }
+            },
+        },
+    },
+    computed: {
+        computedSrc() {
+            if (this.$slots["video-placeholder-sources"])
+                return false
+            return this.src
+        },
+        ifVideo () {
+            let result = false
 
-			if (this.previewOnMouse) {
-				if (this.mouseover) result = true
+            if (this.previewOnMouse) {
+                if (this.mouseover) result = true
 
-				if (this.loadPercent) result = true
-			} else {
-				result = true
-			}
+                if (this.loadPercent) result = true
+            } else {
+                result = true
+            }
 
-			return result
-		},
+            return result
+        },
 
-		showVideo () {
-			let result = false 
-			
-			if (this.previewOnMouse) {
-				if ((this.src || this.$slots["video-placeholder-sources"]) && this.mouseover) result = true
-			} 
+        showVideo () {
+            let result = false
 
-			if (!this.previewOnMouse) {
-				if (this.src || this.$slots["video-placeholder-sources"]) result = true
-			}
+            if (this.previewOnMouse) {
+                if ((this.src || this.$slots["video-placeholder-sources"]) && this.mouseover) result = true
+            }
 
-			return result
-		},
+            if (!this.previewOnMouse) {
+                if (this.src || this.$slots["video-placeholder-sources"]) result = true
+            }
 
-		showPoster () {
-			if (this.poster && !this.showVideo) return true
+            return result
+        },
 
-			return false
-		}
-	}
+        showPoster () {
+            if (this.poster && !this.showVideo) return true
+
+            return false
+        }
+    }
 }
 </script>
 
 <style scoped>
 .loading-bar {
-	position: absolute;
-	top: 0;
-	left: 0;
-	background-color: rgb(192, 192, 192);
-	height: 3px;
-	z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgb(192, 192, 192);
+    height: 3px;
+    z-index: 10;
 }
 
 div.vue-video-player-container {
-	width: 100%;
-	height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 div.vue-video-player-container,
 img,
 video{
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 </style>

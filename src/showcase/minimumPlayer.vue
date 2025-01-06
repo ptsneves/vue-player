@@ -1,48 +1,48 @@
 <template>
-	<section class="section">
-		<div class="vue-video-player-container">
-			<h2 class="title ">Minimum setup</h2>
+    <section class="section">
+        <div class="vue-video-player-container">
+            <h2 class="title ">Minimum setup</h2>
 
-			<p class="subtitle">
-				The minimum you need to use it
-			</p>
-		</div>
-			
-		<div class="flex">
-			<div>
-				<h3 class="subtitle">Example</h3>
+            <p class="subtitle">
+                The minimum you need to use it
+            </p>
+        </div>
 
-				<vue-player 
-					src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
-				>
-				</vue-player>
-			</div>
+        <div class="flex">
+            <div>
+                <h3 class="subtitle">Example</h3>
 
-			<div>
-				<h3 class="subtitle">Code</h3>
+                <vue-player
+                    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                >
+                </vue-player>
+            </div>
 
-				<div class="highlight">
-					<pre><code class="language-html" data-lang="html" >{{html}}</code></pre>
-				</div>
-			</div>
-		</div>
-	</section>
+            <div>
+                <h3 class="subtitle">Code</h3>
+
+                <div class="highlight">
+                    <pre><code class="language-html" data-lang="html" >{{html}}</code></pre>
+                </div>
+            </div>
+        </div>
+    </section>
 </template>
 
 <script>
 import vuePlayer from '../components/player.vue'
 
 export default {
-	components: {
-		vuePlayer,
-	},
+    components: {
+        vuePlayer,
+    },
 
-	data () {
-		return {
-			html: `<vue-player 
-	src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+    data () {
+        return {
+            html: `<vue-player
+    src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
 ></vue-player>`
-		}
-	}
+        }
+    }
 }
 </script>

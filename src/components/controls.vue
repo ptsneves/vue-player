@@ -1,31 +1,31 @@
 <template>
 <transition
-	name="smooth"
+    name="smooth"
 >
-	<div 
-		v-if="show"
-		:class="theClass"
-	>
-		<slot></slot>
-	</div>
+    <div
+        v-if="show"
+        :class="theClass"
+    >
+        <slot></slot>
+    </div>
 </transition>
 </template>
 
 <script>
 export default {
-	name: 'vue-player-controls',
+    name: 'vue-player-controls',
 
-	props: {
-		show: Boolean,
-	},
+    props: {
+        show: Boolean,
+    },
 
-	computed: {
-		theClass() {
-			if (this.$attrs.class) return this.$attrs.class
+    computed: {
+        theClass() {
+            if (this.$attrs.class) return this.$attrs.class
 
-			return '.vue-video-player-controls'
-		}
-	}
+            return '.vue-video-player-controls'
+        }
+    }
 }
 </script>
 

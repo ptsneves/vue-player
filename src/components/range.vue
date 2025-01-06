@@ -1,50 +1,50 @@
 <template>
-	<input
-		:class="theClass"
-		type="range"
-		step="any" 
-		v-bind="$attrs"
-		:value="value"
-		@input="atInput"
-		:style="style"
-		v-if="show"
-	/>
+    <input
+        :class="theClass"
+        type="range"
+        step="any"
+        v-bind="$attrs"
+        :value="value"
+        @input="atInput"
+        :style="style"
+        v-if="show"
+    />
 </template>
 
 <script>
 
 export default {
-	name: 'vue-player-range',
+    name: 'vue-player-range',
 
-	props: {
-		value: null,
-		width: null,
-		show: Boolean,
-	},
+    props: {
+        value: null,
+        width: null,
+        show: Boolean,
+    },
 
-	methods: {
-		atInput (e) {
-			this.$emit('input', Number(e.target.value))
-		}
-	},
+    methods: {
+        atInput (e) {
+            this.$emit('input', Number(e.target.value))
+        }
+    },
 
-	computed: {
-		style () {
-			if (this.$attrs.style) return this.$attrs.style
+    computed: {
+        style () {
+            if (this.$attrs.style) return this.$attrs.style
 
-			let result = {}
+            let result = {}
 
-			if (this.width) result.width = this.width
+            if (this.width) result.width = this.width
 
-			return result
-		},
+            return result
+        },
 
-		theClass () {
-			if (this.$attrs.class) return this.$attrs.class
+        theClass () {
+            if (this.$attrs.class) return this.$attrs.class
 
-			return 'vue-player-range'
-		}
-	}
+            return 'vue-player-range'
+        }
+    }
 }
 </script>
 
@@ -52,7 +52,7 @@ export default {
 
 input[type=range].vue-player-range {
     padding-top: 7px;
-	vertical-align: bottom;
+    vertical-align: bottom;
   -webkit-appearance: none; /* Hides the slider so that custom slider can be made */
   width: 100%; /* Specific width is required for Firefox. */
   background: transparent; /* Otherwise white in Chrome */
@@ -63,7 +63,7 @@ input[type=range].vue-player-range::-webkit-slider-thumb {
 }
 
 input[type="range" i].vue-player-range {
-	margin: 0;
+    margin: 0;
 }
 
 input[type=range].vue-player-range:focus {
@@ -75,7 +75,7 @@ input[type=range].vue-player-range::-ms-track {
   cursor: pointer;
 
   /* Hides the slider so custom styles can be added */
-  background: transparent; 
+  background: transparent;
   border-color: transparent;
   color: transparent;
 }
