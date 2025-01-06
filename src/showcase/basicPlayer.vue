@@ -27,6 +27,14 @@
                     preview-on-mouse
                 >
                     <template v-slot:sources>
+                        <!-- For QA: The first URL is incorrect and should demonstrate fallback to the second source
+                             which is actually correct.
+                             The last source should never play but for QA purposes one can comment out the correct
+                             URL for m3u8 and it should play on mouse over.
+                             The placeholder video cannot be m3u8 on browser that do not support HLS
+                         -->
+                        <source src="http://qthttp.apple.com.edgesuite.net/1010qwoesiuryfg/sl.m3u8" type="application/x-mpegURL" > <!-- Broken URL -->
+                        <source src="http://qthttp.apple.com.edgesuite.net/1010qwoeiuryfg/sl.m3u8" type="application/x-mpegURL" >
                         <source src="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"/>
                     </template>
                     <template v-slot:video-placeholder-sources>

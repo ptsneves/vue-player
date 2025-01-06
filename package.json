@@ -18,7 +18,8 @@
     "core-js": "^2.6.5",
     "iphone-inline-video": "^2.2.2",
     "material-design-icons": "^3.0.1",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "hls.js": "^1.5.18"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.11.0",

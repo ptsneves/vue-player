@@ -150,6 +150,7 @@ import videoPlaceholder from './videoPlaceholder'
    *
    * @author Artur  Sena
    */
+import Hls from 'hls.js';
 export default {
     name: 'vue-player',
 
@@ -335,7 +336,8 @@ export default {
             time: 0,
             duration: 0,
             volumeInternal: 1,
-            fullscreenInternal: false
+            fullscreenInternal: false,
+            hls: null,
         }
     },
 
@@ -495,14 +497,82 @@ export default {
             if (this.time == 0) return
             this.playingComputed = false
             this.$emit('update:play', this.playingComputed);
+        },
+        handleFallback(video, sourceList) {
+            const n = sourceList.slice(1)
+            if (n.length != 0)
+                this.handleHLSSource(video, n)
+        },
+        handleDash(video, sourceList) {
+            this.handleFallback(video, sourceList)
+        },
+        inferMimeType(src) {
+            const extension = src.split('.').pop().toLowerCase();
+            const mimeTypes = {
+                mp4: "video/mp4",
+                webm: "video/webm",
+                ogg: "video/ogg",
+                m3u8: "application/x-mpegURL",
+                mov: "video/quicktime",
+            };
+            return mimeTypes[extension] || "";
+        },
 
-        }
+        handleHLSSource(video, sourceList) {
+            const hlsSource = sourceList[0]
+            if (!hlsSource)
+                return
+
+            const source = hlsSource.src // For the case where src is in video and not in source
+            if (video.canPlayType("application/vnd.apple.mpegurl")) {
+                // Native HLS support (e.g., Safari)
+                video.src = source
+                video.addEventListener("error", () => {
+                    console.warn("Native HLS failed, falling back to other sources...");
+                    this.handleDash(video, sourceList);
+                });
+            }
+            else if (Hls.isSupported()) {
+                if (hlsSource.type !== undefined && hlsSource.type != "application/x-mpegURL" ||
+                this.inferMimeType(source) != "application/x-mpegURL") {
+                    this.handleDash(video, sourceList);
+                    return
+                }
+                // Prevent browser from auto-selecting <source> elements
+                video.src = "";
+
+                // Initialize hls.js
+                this.hls = new Hls();
+                this.hls.loadSource(source);
+                this.hls.attachMedia(video);
+
+                this.hls.on(Hls.Events.MANIFEST_PARSED, () => {
+                });
+
+                this.hls.on(Hls.Events.ERROR, (event, data) => {
+                    // console.error("HLS.js error:", event, data);
+                    if (data.fatal) {
+                        // console.log("HLS error is fatal, falling back to other sources...");
+                        this.handleDash(video, sourceList);
+                    }
+                });
+            }
+            else {
+                this.handleDash(video, sourceList);
+            }
+        },
     },
     mounted() {
-      if (this.$slots.sources) // We need to remove the src attribute if we have the sources slot otherwise src="" will load a local directory
-        this.$refs.video.removeAttribute("src");
+        const video = this.$refs.video;
+        if (this.$slots.sources) { // We need to remove the src attribute if we have the sources slot otherwise src="" will load a local directory
+            video.removeAttribute("src");
+            const sources = Array.from(video.querySelectorAll("source"));
+            this.handleHLSSource(video, sources)
+        }
+        else {
+            this.handleHLSSource(video, [video])
+        }
     },
-
     computed: {
         /**
        * @private
