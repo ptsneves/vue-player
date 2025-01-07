@@ -533,8 +533,8 @@ export default {
                 });
             }
             else if (Hls.isSupported()) {
-                if (hlsSource.type !== undefined && hlsSource.type != "application/x-mpegURL" ||
-                this.inferMimeType(source) != "application/x-mpegURL") {
+                if ((hlsSource.type && hlsSource.type != "application/x-mpegURL") ||
+                    (!hlsSource.type && this.inferMimeType(source) != "application/x-mpegURL")) {
                     this.handleDash(video, sourceList);
                     return
                 }
