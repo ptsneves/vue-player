@@ -439,6 +439,7 @@ export default {
             this.duration = this.$refs.video.duration
 
             if (this.started && !this.checkPlaying()) this.$refs.video.play()
+            this.$emit('update:duration', this.$refs.video.duration)
         },
 
         /**
@@ -455,6 +456,7 @@ export default {
        */
         atTimeupdate () {
             this.time = this.$refs.video.currentTime
+            this.emit('update:current-time', this.time)
         },
 
         /**
