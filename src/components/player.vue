@@ -689,7 +689,7 @@ export default {
 
             let seconds = Math.floor(this.duration - minutes * 60);
             seconds = String(seconds).padStart(2,0)
-
+            this.$emit('update:minutes_duration', `${minutes}:${seconds}`)
             return `${minutes}:${seconds}`
         },
 
@@ -701,7 +701,7 @@ export default {
 
             let seconds = Math.floor(this.time - minutes * 60);
             seconds = String(seconds).padStart(2,0)
-
+            this.$emit('update:minutes_time', `${minutes}:${seconds}`)
             return `${minutes}:${seconds}`
         },
 
