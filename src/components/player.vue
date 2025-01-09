@@ -456,7 +456,7 @@ export default {
        */
         atTimeupdate () {
             this.time = this.$refs.video.currentTime
-            this.emit('update:current-time', this.time)
+            this.$emit('update:current-time', this.time)
         },
 
         /**
