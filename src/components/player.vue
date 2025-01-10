@@ -65,14 +65,13 @@
         class="material-icons size-124 spin"
         v-if="started && loading"
     >refresh</i>
-
-    <!-- Use this slot to replace the controls  -->
-    <slot name="controls">
-        <controls
-            :class="controlsClass"
-            :show="showControlsIf"
-            :style="controlsStyleComputed"
-        >
+    <controls
+        :class="controlsClass"
+        :show="showControlsIf"
+        :style="controlsStyleComputed"
+    >
+        <!-- Use this slot to replace the controls  -->
+        <slot name="controls">
             <p-button
                 :class="playButtonClass"
                 :style="playButtonStyle"
@@ -134,8 +133,9 @@
                 :max="duration"
                 show
             />
-        </controls>
-    </slot>
+
+        </slot>
+    </controls>
 </div>
 </template>
 
