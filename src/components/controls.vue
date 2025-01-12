@@ -23,7 +23,7 @@ export default {
         theClass() {
             if (this.$attrs.class) return this.$attrs.class
 
-            return '.vue-video-player-controls'
+            return 'vue-video-player-controls'
         }
     }
 }
