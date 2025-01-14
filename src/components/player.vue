@@ -431,7 +431,10 @@ export default {
         atVolume () {
             this.showSound = !this.showSound
         },
-
+        setCurrentTime(t) {
+            if (this.$refs.video)
+                this.$refs.video.currentTime = t
+        },
         /**
        * @private
        */
