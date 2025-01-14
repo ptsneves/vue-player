@@ -4,7 +4,6 @@
 >
     <div
         v-if="show"
-        :class="theClass"
     >
         <slot></slot>
     </div>
@@ -18,14 +17,6 @@ export default {
     props: {
         show: Boolean,
     },
-
-    computed: {
-        theClass() {
-            if (this.$attrs.class) return this.$attrs.class
-
-            return 'vue-video-player-controls'
-        }
-    }
 }
 </script>
 

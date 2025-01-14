@@ -1,6 +1,5 @@
 <template>
     <input
-        :class="theClass"
         type="range"
         step="any"
         v-bind="$attrs"
@@ -38,12 +37,6 @@ export default {
 
             return result
         },
-
-        theClass () {
-            if (this.$attrs.class) return this.$attrs.class
-
-            return 'vue-player-range'
-        }
     }
 }
 </script>
