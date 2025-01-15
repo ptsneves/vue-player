@@ -9,6 +9,7 @@
 >
     <video
         ref="video"
+        :src="srcComputed"
         :controls="false"
         :autoplay="autoplay"
         :playsinline="playsinline"
@@ -574,10 +575,6 @@ export default {
             this.handleHLSSource(video, sources)
         }
         else {
-            if (typeof this.src == 'string')
-                video.src = this.src
-            else
-                video.src = this.src[this.srcIndex]
             this.handleHLSSource(video, [video])
         }
     },
@@ -670,6 +667,16 @@ export default {
             set (e) {
                 this.fullscreenInternal = e
             }
+        },
+
+        /**
+       * @private
+       */
+        srcComputed () {
+            if (this.$slots.sources) return ""
+            else if (typeof this.src == 'string') return this.src
+
+            return this.src[this.srcIndex]
         },
 
         /**
